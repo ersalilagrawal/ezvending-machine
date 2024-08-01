@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - JPGS Canteen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>JPGS Canteen</h1>
+    </header>
+    <div class="container">
+        <h2>Dashboard</h2>
+        <div class="student-info">
+            <p><strong>Name:</strong> {{ record['Name'] }}</p>
+            <p><strong>Wallet Balance:</strong> ₹{{ record['Amount'] }}</p>
+            <p><strong>Amount Used:</strong> ₹{{ record['Used'] }}</p>
+            <p><strong>Daily Quota:</strong> ₹{{ record['Quota'] }}</p>
+            {% if record['Used'] >= record['Quota'] %}
+                <p class="alert alert-danger">Daily limit reached!</p>
+            {% elif record['Used'] >= (0.8 * record['Quota']) %}
+                <p class="alert alert-warning">You are close to reaching your daily limit!</p>
+            {% endif %}
+        </div>
+        <form method="POST" action="/update">
+            <input type="hidden" name="student_id" value="{{ record['Student-ID'] }}">
+            <div class="form-group">
+                <label for="amount">Add Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="quota">Set Daily Quota:</label>
+                <input type="number" id="quota" name="quota" value="{{ record['Quota'] }}" required>
+            </div>
+            <h3>Select Products:</h3>
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product['Image'] }}" alt="{{ product['Name'] }}">
+                    <p>{{ product['Name'] }}</p>
+                    <p>Price: ₹{{ product['Price'] }}</p>
+                    <input type="checkbox" name="access" value="{{ product['Id'] }}" {% if product['Id']|string in (record['Access List']|string).split(',') %}checked{% endif %}> Select
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
