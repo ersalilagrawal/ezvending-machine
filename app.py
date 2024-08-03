@@ -71,7 +71,9 @@ def api_get_card(card_id):
 
 def get_student_card(card_id):
     records = student_sheet.get_all_records()
+    print(records)
     record = next((record for record in records if record['ID'] == card_id), None)
+    print(record)
     return record
 
 if __name__ == '__main__':
