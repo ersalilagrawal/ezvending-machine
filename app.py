@@ -49,5 +49,18 @@ def update():
     flash("Details updated successfully", "success")
     return redirect(url_for('index'))
 
+@app.route('/api/student/<student_id>', methods=['GET'])
+def api_get_student(student_id):
+    record = get_student_record(student_id)
+    if record:
+        return jsonify(record)
+    else:
+        return jsonify({'error': 'Student ID not found'}), 404
+
+def get_student_record(student_id):
+    records = student_sheet.get_all_records()
+    record = next((record for record in records if record['Student-ID'] == student_id), None)
+    return record
+
 if __name__ == '__main__':
     app.run(debug=True)
