@@ -33,7 +33,7 @@ def update():
     amount_to_add = int(request.form['amount'])
     quota = request.form['quota']
     access = request.form.getlist('access')
-    access_str = ','.join(access)
+    access_str = '-'.join(access)
 
     records = student_sheet.get_all_records()
     for idx, record in enumerate(records):
