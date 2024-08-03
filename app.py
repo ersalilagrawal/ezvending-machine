@@ -1,5 +1,4 @@
-
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -8,7 +7,7 @@ app.secret_key = 'supersecretkey'  # Needed for flashing messages
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name('../credentials.json', scope)
 client = gspread.authorize(creds)
 
 # Open the workbook and the sheets
@@ -62,5 +61,18 @@ def get_student_record(student_id):
     record = next((record for record in records if record['Student-ID'] == student_id), None)
     return record
 
+@app.route('/api/id/<id>', methods=['GET'])
+def api_get_card(card_id):
+    record = get_student_record(card_id)
+    if record:
+        return jsonify(record)
+    else:
+        return jsonify({'error': 'Student card not found'}), 404
+
+def get_student_card(card_id):
+    records = student_sheet.get_all_records()
+    record = next((record for record in records if record['ID'] == card_id), None)
+    return record
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)
