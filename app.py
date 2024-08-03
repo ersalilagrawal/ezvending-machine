@@ -74,5 +74,10 @@ def get_student_card(card_id):
     record = next((record for record in records if record['ID'] == card_id), None)
     return record
 
+@app.route('/api/products', methods=['GET'])
+def api_get_products():
+    products = products_sheet.get_all_records()
+    return jsonify(products)
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
