@@ -61,7 +61,7 @@ def get_student_record(student_id):
     record = next((record for record in records if record['Student-ID'] == student_id), None)
     return record
 
-@app.route('/api/id/<id>', methods=['GET'])
+@app.route('/api/card/<card_id>', methods=['GET'])
 def api_get_card(card_id):
     record = get_student_record(card_id)
     if record:
