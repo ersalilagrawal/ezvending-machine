@@ -63,21 +63,15 @@ def get_student_record(student_id):
 
 @app.route('/api/card/<card_id>', methods=['GET'])
 def api_get_card(card_id):
-    print(card_id,"1")
-    record = get_student_record(card_id)
-    print(record,"2")
+    record = get_student_card(card_id)
     if record:
-        print(record,"if")
         return jsonify(record)
     else:
-        print(card_id,"else")
         return jsonify({'error': 'Student card not found'}), 404
 
 def get_student_card(card_id):
     records = student_sheet.get_all_records()
-    print(records)
     record = next((record for record in records if record['ID'] == card_id), None)
-    print(record)
     return record
 
 if __name__ == '__main__':
